@@ -45,3 +45,12 @@ output "vm_public_ip" {
   value = google_compute_instance.vm.network_interface[0].access_config[0].nat_ip
 }
 
+data "google_compute_instance" "vm" {
+  name = "gce-tokyo"
+  zone = resource.google_compute_instance.vm.zone
+}
+
+output "vm_public_ip_from_data" {
+  value = data.google_compute_instance.vm.network_interface[0].access_config[0].nat_ip
+}
+
