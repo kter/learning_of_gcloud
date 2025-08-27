@@ -54,3 +54,14 @@ output "vm_public_ip_from_data" {
   value = data.google_compute_instance.vm.network_interface[0].access_config[0].nat_ip
 }
 
+data "terraform_remote_state" "default" {
+  backend = "gcs"
+  config = {
+    bucket = "learning-of-gcloud-tfstate"
+    prefix = "terraform/state"
+  }
+}
+
+output "vm_public_ip_from_data_2" {
+  value = data.terraform_remote_state.default.outputs.vm_public_ip
+}
