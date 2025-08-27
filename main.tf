@@ -29,6 +29,13 @@ module "compute-engine" {
   machine_type = "e2-micro"
 }
 
+module "compute-engine-2" {
+  source = "github.com/kter/learning_of_gcloud_module//compute-engine?ref=v0.0.1"
+  name = "gce-tokyo-2"
+  zone = "asia-northeast1-a"
+  machine_type = "e2-micro"
+}
+
 // dataから取得
 data "google_compute_instance" "vm_study" {
   name = "gce-tokyo"
