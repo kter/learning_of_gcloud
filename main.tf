@@ -17,51 +17,40 @@ provider "google" {
   region = "asia-northeast1"
 }
 
-
-resource "google_compute_instance" "vm" {
-  name         = "gce-tokyo"
-  machine_type = "e2-micro"
-  zone         = "asia-northeast1-a"
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-12"
-    }
-  }
-
-  network_interface {
-    network = "default"
-    access_config {}
-  }
-}
-
-
 variable "project_id" {
   description = "GCP project ID to deploy resources into"
   type        = string
 }
 
-output "vm_public_ip" {
-  value = google_compute_instance.vm.network_interface[0].access_config[0].nat_ip
+module "compute-engine" {
+  source = "./modules/compute-engine"
 }
 
-data "google_compute_instance" "vm" {
+// dataから取得
+data "google_compute_instance" "vm_study" {
   name = "gce-tokyo"
-  zone = resource.google_compute_instance.vm.zone
+  zone = "asia-northeast1-a"
 }
-
 output "vm_public_ip_from_data" {
-  value = data.google_compute_instance.vm.network_interface[0].access_config[0].nat_ip
+  value = data.google_compute_instance.vm_study.network_interface[0].access_config[0].nat_ip
 }
+// dataから取得ここまで
 
-data "terraform_remote_state" "default" {
+// moduleから取得
+output "vm_public_ip_from_module" {
+  value = module.compute-engine.vm_public_ip
+}
+// moduleから取得ここまで
+
+// remote stateから取得
+data "terraform_remote_state" "self" {
   backend = "gcs"
   config = {
     bucket = "learning-of-gcloud-tfstate"
     prefix = "terraform/state"
   }
 }
-
-output "vm_public_ip_from_data_2" {
-  value = data.terraform_remote_state.default.outputs.vm_public_ip
+output "vm_public_ip_from_remote_state" {
+  value = try(data.terraform_remote_state.self.outputs.vm_public_ip, null)
 }
+// remote stateから取得ここまで
