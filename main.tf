@@ -6,6 +6,10 @@ terraform {
     }
   }
   required_version = ">= 1.13.0"
+  backend "gcs" {
+    bucket = "learning-of-gcloud-tfstate"
+    prefix = "terraform/state"
+  }
 }
 
 provider "google" {
