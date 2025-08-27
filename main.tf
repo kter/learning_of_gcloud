@@ -24,6 +24,9 @@ variable "project_id" {
 
 module "compute-engine" {
   source = "./modules/compute-engine"
+  name = "gce-tokyo"
+  zone = "asia-northeast1-a"
+  machine_type = "e2-micro"
 }
 
 // dataから取得

@@ -1,8 +1,8 @@
 
 resource "google_compute_instance" "vm" {
-  name         = "gce-tokyo"
-  machine_type = "e2-micro"
-  zone         = "asia-northeast1-a"
+  name         = var.name
+  machine_type = var.machine_type
+  zone         = var.zone
 
   boot_disk {
     initialize_params {
