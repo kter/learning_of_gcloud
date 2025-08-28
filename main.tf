@@ -43,6 +43,20 @@ module "compute-engine-list" {
   count = length(var.instance_name)
 }
 
+// for_each式を使って複数構築
+// 配列ではなく集合かマップである必要があるためtoset()を使用
+module "compute-engine-list-for-each" {
+  source = "./modules/compute-engine"
+  for_each = toset(var.instance_name)
+  name = each.value
+  zone = "asia-northeast1-a"
+  machine_type = "e2-micro"
+}
+// foreach式から出力(values())を使用
+output "instance-lists-foreach" {
+  value = values(module.compute-engine-list-for-each)[*].vm_public_ip
+}
+
 
 // スプラット式を使って全て表示
 output "instance-lists" {
