@@ -55,14 +55,15 @@ module "compute-engine-2" {
   machine_type = "e2-micro"
 }
 
-// dataから取得
-data "google_compute_instance" "vm_study" {
-  name = "gce-tokyo"
-  zone = "asia-northeast1-a"
-}
-output "vm_public_ip_from_data" {
-  value = data.google_compute_instance.vm_study.network_interface[0].access_config[0].nat_ip
-}
+// apply前だと失敗するのでコメントアウト
+// // dataから取得
+// data "google_compute_instance" "vm_study" {
+//   name = "gce-tokyo"
+//   zone = "asia-northeast1-a"
+// }
+// output "vm_public_ip_from_data" {
+//   value = data.google_compute_instance.vm_study.network_interface[0].access_config[0].nat_ip
+// }
 // dataから取得ここまで
 
 // moduleから取得
