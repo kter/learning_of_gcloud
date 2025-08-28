@@ -22,6 +22,11 @@ variable "project_id" {
   type        = string
 }
 
+variable "instance_name" {
+  type = list(string)
+  default = ["gce-tokyo-list1", "gce-tokyo-list2"]
+}
+
 module "compute-engine" {
   source = "./modules/compute-engine"
   name = "gce-tokyo"
@@ -29,6 +34,20 @@ module "compute-engine" {
   machine_type = "e2-micro"
 }
 
+// count式を使って複数構築
+module "compute-engine-list" {
+  source = "./modules/compute-engine"
+  name = var.instance_name[count.index]
+  zone = "asia-northeast1-a"
+  machine_type = "e2-micro"
+  count = length(var.instance_name)
+}
+
+
+// スプラット式を使って全て表示
+output "instance-lists" {
+  value = module.compute-engine-list[*].vm_public_ip
+}
 module "compute-engine-2" {
   source = "github.com/kter/learning_of_gcloud_module//compute-engine?ref=v0.0.1"
   name = "gce-tokyo-2"
