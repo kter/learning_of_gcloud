@@ -56,6 +56,7 @@ module "compute-engine-2" {
 }
 
 // apply前だと失敗するのでコメントアウト
+// 従ってdataは別チーム管理、手動作成済みのもの、最新状態が必要なものに限った方が良い
 // // dataから取得
 // data "google_compute_instance" "vm_study" {
 //   name = "gce-tokyo"
