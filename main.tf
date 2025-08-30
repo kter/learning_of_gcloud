@@ -154,3 +154,13 @@ resource "google_compute_instance" "vm_study" {
   }
 }
 // dynamicブロックの例ここまで
+
+// for式の例ここから
+variable "instance_list" {
+  type = list(string)
+  default = ["gce-tokyo", "gce-tokyo-2"]
+}
+output "instance_list" {
+  value = [for instance in var.instance_list : instance]
+}
+// for式の例ここまで
