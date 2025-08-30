@@ -186,3 +186,24 @@ output "instance_list_with_charactor_directive" {
   value = "%{for instance in var.instance_list } ${instance} %{endfor}"
 }
 // for式の例ここまで
+
+// if statement using count example this here
+variable "instance_create" {
+  type = bool
+  default = false
+}
+module "compute-engine-3" {
+  count = var.instance_create ? 1 : 0
+  source = "./modules/compute-engine"
+  name = "gce-tokyo-3"
+  zone = "asia-northeast1-a"
+  machine_type = "e2-micro"
+}
+module "compute-engine-4" {
+  count = var.instance_create ? 0 : 1
+  source = "./modules/compute-engine"
+  name = "gce-tokyo-4"
+  zone = "asia-northeast1-a"
+  machine_type = "e2-micro"
+}
+// if statement using count example this here
