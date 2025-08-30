@@ -163,4 +163,11 @@ variable "instance_list" {
 output "instance_list" {
   value = [for instance in var.instance_list : instance]
 }
+output "instance_list_with_upper" {
+  value = [for instance in var.instance_list : upper(instance)]
+}
+output "instance_list_with_upper_and_length" {
+  value = [for instance in var.instance_list : upper(instance) if length(instance) > 10]
+}
+
 // for式の例ここまで
