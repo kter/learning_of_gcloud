@@ -181,4 +181,8 @@ variable "instance_map" {
 output "instance_map" {
   value = { for key, value in var.instance_map : key => upper(value) }
 }
+
+output "instance_list_with_charactor_directive" {
+  value = "%{for instance in var.instance_list } ${instance} %{endfor}"
+}
 // for式の例ここまで
