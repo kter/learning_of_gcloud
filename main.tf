@@ -170,4 +170,15 @@ output "instance_list_with_upper_and_length" {
   value = [for instance in var.instance_list : upper(instance) if length(instance) > 10]
 }
 
+variable "instance_map" {
+  type = map(string)
+  default = {
+    "gce-tokyo" = "gce-tokyo-2"
+    "gce-tokyo-2" = "gce-tokyo"
+  }
+}
+
+output "instance_map" {
+  value = { for key, value in var.instance_map : key => upper(value) }
+}
 // for式の例ここまで
