@@ -99,3 +99,53 @@ output "vm_public_ip_from_remote_state" {
   value = try(data.terraform_remote_state.self.outputs.vm_public_ip, null)
 }
 // remote stateから取得ここまで
+
+// dynamicブロックの例ここから
+variable "additional_disks" {
+  default = [
+    {
+      name = "disk1",
+      size = 10,
+      type = "pd-standard"
+    },
+    {
+      name = "disk2",
+      size = 10,
+      type = "pd-standard"
+    }
+  ]
+}
+
+resource "google_compute_disk" "additional_disks" {
+  for_each = { for disk in var.additional_disks : disk.name => disk }
+  name = each.value.name
+  size = each.value.size
+  type = each.value.type
+  zone = "asia-northeast1-a"
+}
+
+resource "google_compute_instance" "vm_study" {
+  name = "gce-tokyo"
+  zone = "asia-northeast1-a"
+  machine_type = "e2-micro"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-12"
+    }
+  }
+
+  dynamic "attached_disk" {
+    for_each = google_compute_disk.additional_disks
+    content {
+      source = attached_disk.value.self_link
+      mode = "READ_WRITE"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {}
+  }
+}
+// dynamicブロックの例ここまで
