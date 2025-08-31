@@ -234,3 +234,29 @@ resource "google_compute_disk" "additional_disks_2" {
   zone = "asia-northeast1-a"
 }
 // if statement using for_each and for
+
+// conditional branching using for_each and for example this here
+variable "additional_disks_3" {
+  default = [
+    {
+      name = "disk1",
+      size = 10,
+      type = "pd-standard"
+    },
+    {
+      name = "disk2",
+      size = 15,
+      type = "pd-standard"
+    }
+  ]
+}
+
+resource "google_compute_disk" "additional_disks_3" {
+  for_each = {
+    for disk in var.additional_disks_3 : upper(disk.name) => disk if disk.size >= 15
+  }
+  name = each.value.name
+  size = each.value.size
+  type = each.value.type
+  zone = "asia-northeast1-a"
+}
