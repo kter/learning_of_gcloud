@@ -207,3 +207,30 @@ module "compute-engine-4" {
   machine_type = "e2-micro"
 }
 // if statement using count example this here
+
+// if statement using for_each and for
+variable "additional_disks_2" {
+  default = [
+    {
+      name = "disk1",
+      size = 10,
+      type = "pd-standard"
+    },
+    {
+      name = "disk2",
+      size = 10,
+      type = "pd-standard"
+    }
+  ]
+}
+
+resource "google_compute_disk" "additional_disks_2" {
+  for_each = {
+    for disk in var.additional_disks_2 : disk.name => disk
+  }
+  name = each.value.name
+  size = each.value.size
+  type = each.value.type
+  zone = "asia-northeast1-a"
+}
+// if statement using for_each and for
