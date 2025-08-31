@@ -253,10 +253,28 @@ variable "additional_disks_3" {
 
 resource "google_compute_disk" "additional_disks_3" {
   for_each = {
-    for disk in var.additional_disks_3 : upper(disk.name) => disk if disk.size >= 15
+    for disk in var.additional_disks_3 : disk.name => disk if disk.size >= 15
   }
   name = each.value.name
   size = each.value.size
   type = each.value.type
   zone = "asia-northeast1-a"
 }
+// conditional branching using for_each and for example this here
+
+// if directive example this here
+variable "test_names" {
+  default = [
+    "test1",
+    "test2",
+    "test3"
+  ]
+}
+output "test_names" {
+  value = <<EOF
+  %{~ for i, name in var.test_names ~}
+  ${name}%{if i < length(var.test_names) - 1}, %{ else }. %{ endif }
+  %{~ endfor ~}
+  EOF
+}
+// if directive example this here
