@@ -278,3 +278,42 @@ output "test_names" {
   EOF
 }
 // if directive example this here
+
+// example of validation
+variable "instance_name_2" {
+  type = string
+  default = "gce-tokyo-3"
+  // 基本的な入力のサニタイズ
+  validation {
+    condition = length(var.instance_name_2) > 0
+    error_message = "instance_name_2 must be longer than 0"
+  }
+}
+// example of varidate
+
+//example of precondition and postcondition
+variable "instance_name_3" {
+  type = string
+  default = "gce-tokyo-3"
+}
+
+resource "google_compute_disk" "vm_study_3_disk" {
+  name = "vm-study-3-disk"
+  size = 20
+  type = "pd-standard"
+  zone = "asia-northeast1-a"
+
+  lifecycle {
+    // 基本的な前提のチェック
+    precondition {
+      condition = var.instance_name_3 != null && length(var.instance_name_3) > 0
+      error_message = "instance_name_3 must be provided and longer than 0 characters"
+    }
+    // 基本的な約束事を強制
+    postcondition {
+      condition = self.size > 0
+      error_message = "vm_study_3_disk must have a size greater than 0"
+    }
+  }
+}
+//example of precondition and postcondition
