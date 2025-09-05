@@ -317,3 +317,15 @@ resource "google_compute_disk" "vm_study_3_disk" {
   }
 }
 //example of precondition and postcondition
+
+resource "null_resource" "example" {
+
+  triggers = {
+    always_run = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = "echo 'Hello, World!'"
+  }
+}
+
