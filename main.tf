@@ -329,3 +329,26 @@ resource "null_resource" "example" {
   }
 }
 
+data "external" "example" {
+  program = ["bash", "-c", "echo '{\"name\": \"John\"}'"]
+}
+
+output "example" {
+  value = data.external.example.result.name
+}
+
+data "external" "example_2" {
+  program = ["bash", "-c", "cat /dev/stdin"]
+
+  query = {
+    foo = "bar"
+  }
+}
+
+output "example_2" {
+  value = data.external.example_2.result
+}
+
+output "example_2_1" {
+  value = data.external.example_2.result.foo
+}
